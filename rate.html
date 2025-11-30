@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Rating Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        select:disabled, input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .rating-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .rating-section.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .rating-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .rating-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .rating-question {
+            margin-bottom: 18px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .rating-scale {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        .rating-option {
+            position: relative;
+        }
+
+        .rating-option input[type="radio"] {
+            display: none;
+        }
+
+        .rating-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+            font-size: 18px;
+            min-height: 55px;
+            margin: 0;
+        }
+
+        .rating-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .rating-option label:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            padding: 0 5px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 30px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            display: none;
+            border: 2px solid #c3e6cb;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-box.show {
+            display: block;
+        }
+
+        .success-box h2 {
+            margin-bottom: 10px;
+            color: #155724;
+            font-size: 28px;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffc107;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        .alert-box.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .rating-scale {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .rating-option label {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .rating-scale {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Teacher Rating Form</h1>
+        <p class="subtitle">Your honest feedback helps improve teaching quality</p>
+        
+        <!-- Success Message -->
+        <div class="success-box" id="successBox">
+            <h2>✅ Thank You!</h2>
+            <p>Your rating has been submitted successfully. Your feedback is valuable!</p>
+        </div>
+
+        <!-- Alert Message -->
+        <div class="alert-box" id="alertBox"></div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <p><strong>📌 Important Note:</strong> You can rate each teacher only once. Please ensure all information is correct before submitting. Your responses are confidential and will be used solely for improving teaching quality.</p>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
+
+        <!-- Main Form -->
+        <form id="ratingForm">
+            
+            <!-- Section 1: Student Information -->
+            <div class="form-section">
+                <div class="section-title">📝 Student Information</div>
+                
+                <div class="form-group">
+                    <label>Class<span class="required">*</span></label>
+                    <input type="text" id="classInput" placeholder="Enter your class (e.g., 10A, 11B)" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Student Name<span class="required">*</span></label>
+                    <select id="studentSelect" disabled required>
+                        <option value="">-- First, enter your class above --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject<span class="required">*</span></label>
+                    <select id="subjectSelect" disabled required>
+                        <option value="">-- Enter your class first --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Teacher Name<span class="required">*</span></label>
+                    <input type="text" id="teacherInput" readonly placeholder="Will auto-fill based on class and subject">
+                </div>
+            </div>
+
+            <!-- Section 2: Rating Questions -->
+            <div class="rating-section" id="ratingSection">
+                <div class="section-title">⭐ Rate Your Teacher</div>
+                
+                <div id="ratingQuestions"></div>
+
+                <div class="scale-labels">
+                    <span>👎 0 = Poor</span>
+                    <span>👍 5 = Excellent</span>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    Submit Rating
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - REPLACE THIS URL
+        // ============================================
+        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE';
+
+        // ============================================
+        // RATING QUESTIONS
+        // ============================================
+        const RATING_QUESTIONS = [
+            "Subject knowledge and expertise",
+            "Clarity of explanation",
+            "Teaching methodology effectiveness",
+            "Use of examples and illustrations",
+            "Encourages student participation",
+            "Availability for doubt clearing",
+            "Fair assessment and evaluation",
+            "Classroom management",
+            "Punctuality and regularity",
+            "Use of teaching aids/technology",
+            "Motivates students to learn",
+            "Communication skills",
+            "Respectful behavior towards students",
+            "Encourages critical thinking",
+            "Provides constructive feedback",
+            "Overall teaching effectiveness"
+        ];
+
+        // ============================================
+        // INITIALIZE RATING QUESTIONS
+        // ============================================
+        function initializeRatingQuestions() {
+            const container = document.getElementById('ratingQuestions');
+            
+            RATING_QUESTIONS.forEach((question, index) => {
+                const questionNum = index + 1;
+                const ratingItem = document.createElement('div');
+                ratingItem.className = 'rating-item';
+                
+                let optionsHTML = '';
+                for (let value = 0; value <= 5; value++) {
+                    optionsHTML += `
+                        <div class="rating-option">
+                            <input type="radio" id="q${questionNum}_${value}" name="q${questionNum}" value="${value}" required>
+                            <label for="q${questionNum}_${value}">${value}</label>
+                        </div>
+                    `;
+                }
+                
+                ratingItem.innerHTML = `
+                    <div class="rating-question">
+                        <span class="question-number">${questionNum}</span>${question}
+                    </div>
+                    <div class="rating-scale">
+                        ${optionsHTML}
+                    </div>
+                `;
+                
+                container.appendChild(ratingItem);
+            });
+        }
+
+        // Initialize on page load
+        initializeRatingQuestions();
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').classList.toggle('show', show);
+        }
+
+        function showAlert(message, isError = false) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.classList.toggle('error', isError);
+            alertBox.classList.add('show');
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 6000);
+        }
+
+        // ============================================
+        // CLASS INPUT HANDLER - LOADS STUDENTS & SUBJECTS
+        // ============================================
+        let classLoadTimeout;
+        document.getElementById('classInput').addEventListener('input', function() {
+            clearTimeout(classLoadTimeout);
+            
+            const className = this.value.trim();
+            
+            // Reset dependent fields
+            document.getElementById('studentSelect').innerHTML = '<option value="">-- Enter your class first --</option>';
+            document.getElementById('studentSelect').disabled = true;
+            document.getElementById('subjectSelect').innerHTML = '<option value="">-- Enter your class first --</option>';
+            document.getElementById('subjectSelect').disabled = true;
+            document.getElementById('teacherInput').value = '';
+            document.getElementById('ratingSection').classList.remove('show');
+            
+            if (!className) return;
+            
+            classLoadTimeout = setTimeout(async () => {
+                showLoading(true);
+
+                try {
+                    // Fetch students
+                    const studentsResponse = await fetch(`${WEB_APP_URL}?action=getStudents&class=${encodeURIComponent(className)}`);
+                    const studentsData = await studentsResponse.json();
+                    
+                    const studentSelect = document.getElementById('studentSelect');
+                    
+                    if (studentsData.success && studentsData.students && studentsData.students.length > 0) {
+                        studentSelect.innerHTML = '<option value="">-- Select your name --</option>';
+                        studentsData.students.forEach(student => {
+                            const option = document.createElement('option');
+                            option.value = student;
+                            option.textContent = student;
+                            studentSelect.appendChild(option);
+                        });
+                        studentSelect.disabled = false;
+                    } else {
+                        studentSelect.innerHTML = '<option value="">❌ No students found for this class</option>';
+                        showAlert('No students found for class: ' + className, true);
+                    }
+
+                    // Fetch subjects
+                    const subjectsResponse = await fetch(`${WEB_APP_URL}?action=getSubjects&class=${encodeURIComponent(className)}`);
+                    const subjectsData = await subjectsResponse.json();
+                    
+                    const subjectSelect = document.getElementById('subjectSelect');
+                    
+                    if (subjectsData.success && subjectsData.subjects && subjectsData.subjects.length > 0) {
+                        subjectSelect.innerHTML = '<option value="">-- Select subject --</option>';
+                        subjectsData.subjects.forEach(subject => {
+                            const option = document.createElement('option');
+                            option.value = subject;
+                            option.textContent = subject;
+                            subjectSelect.appendChild(option);
+                        });
+                        subjectSelect.disabled = false;
+                    } else {
+                        subjectSelect.innerHTML = '<option value="">❌ No subjects found</option>';
+                    }
+
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    showAlert('Error loading data. Please check your connection and Web App URL.', true);
+                } finally {
+                    showLoading(false);
+                }
+            }, 1000);
+        });
+
+        // ============================================
+        // SUBJECT SELECTION - AUTO-FILLS TEACHER
+        // ============================================
+        document.getElementById('subjectSelect').addEventListener('change', async function() {
+            const className = document.getElementById('classInput').value.trim();
+            const subject = this.value;
+            
+            document.getElementById('teacherInput').value = '';
+            document.getElementById('ratingSection').classList.remove('show');
+            
+            if (!className || !subject) return;
+
+            showLoading(true);
+
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=getTeacher&class=${encodeURIComponent(className)}&subject=${encodeURIComponent(subject)}`);
+                const data = await response.json();
+                
+                if (data.success && data.teacher) {
+                    document.getElementById('teacherInput').value = data.teacher;
+                    
+                    // Check if already submitted
+                    const studentName = document.getElementById('studentSelect').value;
+                    if (studentName) {
+                        await checkSubmissionStatus(studentName, data.teacher);
+                    }
+                } else {
+                    showAlert('No teacher found for this class-subject combination', true);
+                }
+            } catch (error) {
+                console.error('Error fetching teacher:', error);
+                showAlert('Error loading teacher information', true);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // ============================================
+        // STUDENT SELECTION - CHECK SUBMISSION STATUS
+        // ============================================
+        document.getElementById('studentSelect').addEventListener('change', async function() {
+            const studentName = this.value;
+            const teacherName = document.getElementById('teacherInput').value;
+            
+            if (studentName && teacherName) {
+                await checkSubmissionStatus(studentName, teacherName);
+            }
+        });
+
+        // ============================================
+        // CHECK IF ALREADY SUBMITTED
+        // ============================================
+        async function checkSubmissionStatus(studentName, teacherName) {
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=checkSubmission&student=${encodeURIComponent(studentName)}&teacher=${encodeURIComponent(teacherName)}`);
+                const data = await response.json();
+                
+                if (data.success && data.alreadySubmitted) {
+                    const date = new Date(data.submissionDate).toLocaleDateString();
+                    showAlert(`⚠️ You have already rated ${teacherName} on ${date}. You cannot rate the same teacher twice.`, true);
+                    document.getElementById('ratingSection').classList.remove('show');
+                } else {
+                    document.getElementById('ratingSection').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('ratingSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }
+            } catch (error) {
+                console.error('Error checking submission:', error);
+                showAlert('Error checking submission status', true);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        document.getElementById('ratingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                action: 'submitRating',
+                class: document.getElementById('classInput').value.trim(),
+                student: document.getElementById('studentSelect').value,
+                subject: document.getElementById('subjectSelect').value,
+                teacher: document.getElementById('teacherInput').value,
+                ratings: []
+            };
+
+            // Validate basic info
+            if (!formData.class || !formData.student || !formData.subject || !formData.teacher) {
+                showAlert('Please fill in all required fields', true);
+                return;
+            }
+
+            // Collect all ratings
+            let allAnswered = true;
+            for (let i = 1; i <= 16; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    showAlert(`Please answer question ${i}`, true);
+                    allAnswered = false;
+                    document.querySelector(`input[name="q${i}"]`).closest('.rating-item').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                }
+                formData.ratings.push(parseInt(selected.value));
+            }
+
+            if (!allAnswered) return;
+
+            // Disable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            showLoading(true);
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('successBox').classList.add('show');
+                    document.getElementById('ratingForm').reset();
+                    document.getElementById('ratingSection').classList.remove('show');
+                    document.getElementById('studentSelect').disabled = true;
+                    document.getElementById('subjectSelect').disabled = true;
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    showAlert('✅ Thank you! Your rating has been submitted successfully.');
+                } else {
+                    showAlert(result.error || 'Submission failed. Please try again.', true);
+                }
+
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                showAlert('❌ Error submitting rating. Please check your connection and try again.', true);
+            } finally {
+                showLoading(false);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Rating';
+            }
+        });
+
+        // ============================================
+        // VALIDATION ON PAGE LOAD
+        // ============================================
+        window.addEventListener('load', function() {
+            if (WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbz4ylFDXCNXCyquB9MqSAEOVWSooZjaGciY7MNBncQZCKjTtPYJPK-0K6mmY5a7LR0/exec') {
+                showAlert('⚠️ SETUP REQUIRED: Please update the WEB_APP_URL in this HTML file with your Apps Script Web App URL', true);
+            }
+        });
+    </script>
+</body>
+</html>
